@@ -15,22 +15,22 @@ import javax.xml.ws.Service;
  * 
  */
 @WebServiceClient(name = "CalculatorImplService", 
-                  wsdlLocation = "file:/D:/workspace/springboot-camel-demo/hello_world.wsdl",
+                  wsdlLocation = "http://127.0.0.1:9902/ws/calc?wsdl",
                   targetNamespace = "http://webservice.route.camel.dah.com/")
 public class CalculatorImplService extends Service {
 
     public final static URL WSDL_LOCATION;
 
-    public final static QName SERVICE = new QName("http://webservice.route.camel.dah.com/", "CalculatorImplService");
-    public final static QName CalculatorImplPort = new QName("http://webservice.route.camel.dah.com/", "CalculatorImplPort");
+    public final static QName SERVICE = new QName("http://webservice.route.camel.dah.com/", "CalculatorService");
+    public final static QName CalculatorImplPort = new QName("http://webservice.route.camel.dah.com/", "CalculatorPort");
     static {
         URL url = null;
         try {
-            url = new URL("file:/D:/workspace/springboot-camel-demo/hello_world.wsdl");
+            url = new URL("http://127.0.0.1:9902/ws/calc?wsdl");
         } catch (MalformedURLException e) {
             java.util.logging.Logger.getLogger(CalculatorImplService.class.getName())
                 .log(java.util.logging.Level.INFO, 
-                     "Can not initialize the default wsdl from {0}", "file:/D:/workspace/springboot-camel-demo/hello_world.wsdl");
+                     "Can not initialize the default wsdl from {0}", "http://127.0.0.1:9902/ws/calc?wsdl");
         }
         WSDL_LOCATION = url;
     }

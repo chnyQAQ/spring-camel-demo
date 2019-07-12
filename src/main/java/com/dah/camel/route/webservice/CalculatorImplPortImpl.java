@@ -22,7 +22,7 @@ import javax.jws.WebService;
                       serviceName = "CalculatorImplService",
                       portName = "CalculatorImplPort",
                       targetNamespace = "http://webservice.route.camel.dah.com/",
-                      wsdlLocation = "file:/D:/workspace/springboot-camel-demo/hello_world.wsdl",
+                      wsdlLocation = "http://127.0.0.1:9902/ws/calc?wsdl",
                       endpointInterface = "com.dah.camel.route.webservice.Calculator")
                       
 public class CalculatorImplPortImpl implements Calculator {
