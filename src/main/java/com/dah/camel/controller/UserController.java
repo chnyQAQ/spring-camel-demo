@@ -2,6 +2,7 @@ package com.dah.camel.controller;
 
 import com.dah.camel.domain.user.User;
 import com.dah.camel.domain.user.UserMapper;
+import com.dah.camel.domain.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,9 @@ public class UserController {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping(path="/users/{id}", produces = "application/json")
     public User getById(@PathVariable("id") String id){
