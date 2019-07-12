@@ -28,9 +28,8 @@ public class RestRouteBuilder extends SpringRouteBuilder {
         //rest://method:path[:uriTemplate]?[options]
         //bindingMode(RestBindingMode.json) 绑定模型为json
         //restConfiguration().component("jetty").host("127.0.0.1").port(8080).bindingMode(RestBindingMode.json);
-
-        //restConfiguration().host("127.0.0.1").port(8001);
-        //restConfiguration().component("jetty").host("127.0.0.1").port(8081).bindingMode(RestBindingMode.json);
+        //restConfiguration().host("127.0.0.1").port(8001); //1,调用本工程的接口（使用本工程的ip和port）
+        //restConfiguration().component("jetty").host("127.0.0.1").port(8081).bindingMode(RestBindingMode.json); //
 
         /*from("rest:get:hello")
                 .transform().constant("Bye World");
