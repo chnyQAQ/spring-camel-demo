@@ -1,0 +1,143 @@
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.route.camel.dah.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="CalculatorImplService" targetNamespace="http://webservice.route.camel.dah.com/">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://webservice.route.camel.dah.com/" elementFormDefault="unqualified" targetNamespace="http://webservice.route.camel.dah.com/" version="1.0">
+            <xs:element name="add" type="tns:add"/>
+            <xs:element name="addResponse" type="tns:addResponse"/>
+            <xs:element name="getVersion" type="tns:getVersion"/>
+            <xs:element name="getVersionResponse" type="tns:getVersionResponse"/>
+            <xs:element name="multiply" type="tns:multiply"/>
+            <xs:element name="multiplyResponse" type="tns:multiplyResponse"/>
+            <xs:element name="subtract" type="tns:subtract"/>
+            <xs:element name="subtractResponse" type="tns:subtractResponse"/>
+            <xs:complexType name="subtract">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="arg0" type="xs:int"/>
+                    <xs:element minOccurs="0" name="arg1" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="subtractResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="return" type="xs:long"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="multiply">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="arg0" type="xs:int"/>
+                    <xs:element minOccurs="0" name="arg1" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="multiplyResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="return" type="xs:long"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="add">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="arg0" type="xs:int"/>
+                    <xs:element minOccurs="0" name="arg1" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="addResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="return" type="xs:long"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="getVersion">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="getVersionResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="return" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="multiply">
+        <wsdl:part element="tns:multiply" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getVersionResponse">
+        <wsdl:part element="tns:getVersionResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="multiplyResponse">
+        <wsdl:part element="tns:multiplyResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="addResponse">
+        <wsdl:part element="tns:addResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="subtract">
+        <wsdl:part element="tns:subtract" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="subtractResponse">
+        <wsdl:part element="tns:subtractResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="add">
+        <wsdl:part element="tns:add" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getVersion">
+        <wsdl:part element="tns:getVersion" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="Calculator">
+        <wsdl:operation name="subtract">
+            <wsdl:input message="tns:subtract" name="subtract"> </wsdl:input>
+            <wsdl:output message="tns:subtractResponse" name="subtractResponse"> </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="multiply">
+            <wsdl:input message="tns:multiply" name="multiply"> </wsdl:input>
+            <wsdl:output message="tns:multiplyResponse" name="multiplyResponse"> </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="add">
+            <wsdl:input message="tns:add" name="add"> </wsdl:input>
+            <wsdl:output message="tns:addResponse" name="addResponse"> </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getVersion">
+            <wsdl:input message="tns:getVersion" name="getVersion"> </wsdl:input>
+            <wsdl:output message="tns:getVersionResponse" name="getVersionResponse"> </wsdl:output>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="CalculatorImplServiceSoapBinding" type="tns:Calculator">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="subtract">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="subtract">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="subtractResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="multiply">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="multiply">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="multiplyResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="add">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="add">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="addResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getVersion">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="getVersion">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="getVersionResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="CalculatorImplService">
+        <wsdl:port binding="tns:CalculatorImplServiceSoapBinding" name="CalculatorImplPort">
+            <soap:address location="http://127.0.0.1:9902/ws/calc"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

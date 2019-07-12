@@ -1,0 +1,5 @@
+<root>
+    <item name='org.apache.camel.component.websocket.WebsocketComponent'>
+        <annotation name='java.lang.Deprecated'/>
+    </item>
+</root>
