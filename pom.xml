@@ -69,7 +69,7 @@
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>RELEASE</version>
+            <version>2.0.1</version>
         </dependency>
 
         <dependency>
@@ -108,7 +108,7 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-rest</artifactId>
-            <version>RELEASE</version>
+            <version>3.0.0-M4</version>
             <scope>compile</scope>
         </dependency>
 
@@ -160,43 +160,39 @@
         </dependency>
 
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-cxf</artifactId>
-            <version>2.20.2</version>
+            <version>${camel-version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-cxf-transport</artifactId>
-            <version>2.20.2</version>
+            <version>${camel-version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.4.15.v20190215</version>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.ws</groupId>
-            <artifactId>spring-ws-core</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
             <groupId>wsdl4j</groupId>
             <artifactId>wsdl4j</artifactId>
-            <version>RELEASE</version>
+            <version>1.6.2</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-spring-ws</artifactId>
-            <version>RELEASE</version>
+            <version>${camel-version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jaxb</artifactId>
-            <version>RELEASE</version>
+            <version>${camel-version}</version>
         </dependency>
 
         <dependency>
@@ -220,7 +216,7 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http-jetty</artifactId>
-            <version>RELEASE</version>
+            <version>3.3.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.eclipse.jetty</groupId>
@@ -269,31 +265,31 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-ftp</artifactId>
-            <version>2.23.1</version>
+            <version>${camel-version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-http</artifactId>
-            <version>2.23.1</version>
+            <version>${camel-version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-netty-http</artifactId>
-            <version>2.23.1</version>
+            <version>${camel-version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jdbc</artifactId>
-            <version>2.23.1</version>
+            <version>${camel-version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jms</artifactId>
-            <version>2.23.1</version>
+            <version>${camel-version}</version>
         </dependency>
 
         <dependency>
@@ -305,7 +301,7 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-spring-redis</artifactId>
-            <version>2.23.1</version>
+            <version>${camel-version}</version>
         </dependency>
 
         <dependency>
@@ -317,7 +313,7 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-websocket</artifactId>
-            <version>2.23.1</version>
+            <version>${camel-version}</version>
         </dependency>
 
 
