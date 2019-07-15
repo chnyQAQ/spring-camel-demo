@@ -36,7 +36,7 @@ public class UserController {
         return user;
     }
 
-    @PutMapping(path="/users", produces = "application/json")
+    @PostMapping(path="/users", produces = "application/json")
     public User save(User user){
         user.setId(UUID.randomUUID().toString());
         userMapper.save(user);
