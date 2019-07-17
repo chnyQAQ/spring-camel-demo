@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.xml.ws.Endpoint;
 
-@Component
+//@Component
 public class WebServiceRouteBuilder extends SpringRouteBuilder {
 
     private static final String SERVICE_ADDRESS = "http://127.0.0.1:9902/ws/calc";

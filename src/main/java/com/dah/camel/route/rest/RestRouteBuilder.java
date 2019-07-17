@@ -3,6 +3,8 @@ package com.dah.camel.route.rest;
 import com.dah.camel.domain.user.User;
 import com.dah.camel.domain.user.UserMapper;
 import com.dah.camel.domain.user.UserService;
+import io.swagger.util.Json;
+import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.model.rest.RestBindingMode;
@@ -12,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
 
 //@Component
 public class RestRouteBuilder extends SpringRouteBuilder {
@@ -29,7 +33,7 @@ public class RestRouteBuilder extends SpringRouteBuilder {
         //bindingMode(RestBindingMode.json) 绑定模型为json
         //restConfiguration().component("jetty").host("127.0.0.1").port(8080).bindingMode(RestBindingMode.json);
         //restConfiguration().host("127.0.0.1").port(8001); //1,调用本工程的接口（使用本工程的ip和port）
-        //restConfiguration().component("jetty").host("127.0.0.1").port(8081).bindingMode(RestBindingMode.json); //
+        restConfiguration().component("jetty").host("127.0.0.1").port(8081).bindingMode(RestBindingMode.json); //
 
         /*from("rest:get:hello")
                 .transform().constant("Bye World");
@@ -46,15 +50,29 @@ public class RestRouteBuilder extends SpringRouteBuilder {
 //          from("jetty:http://127.0.0.1:8080/start")
 //                .to(("rest:get:hello/person?bridgeEndpoint=true"));
 
-         from("timer:hello-user?period=10s")
-                .to("rest:get:hello/person1")
-                .log("${body}");
+//         from("timer:hello-user?period=10s")
+//                .to("rest:get:hello/person1").log("${body}");
 
        //将http://127.0.0.1:8001/users 接口 发布到 http://127.0.0.1:8081/camel/users
-//        from("rest:get:/camel/users")
-//                .to("jetty:http://127.0.0.1:8001/users?bridgeEndpoint=true");
+        from("rest:get:/camel/users")
+                .to("jetty:http://127.0.0.1:8001/users?bridgeEndpoint=true&httpMethodRestrict=GET&mapHttpMessageBody=true");
 
-        //put 和 post 方式暂未测试成功
+        //uri带参数时，to里面的地址会加上uri的地址（如何解决）？
+        from("rest:get:/camel/users/{id}")
+                .to("jetty:http://127.0.0.1:8001/users/"+ RestProcessor.getUrl_id() +"?bridgeEndpoint=true&httpMethodRestrict=GET&mapHttpMessageBody=true");
+
+        //post 方式 :
+        // 参数
+        // 1. 从body传递：form-data
+        // 2. 从params传递：传统的表单数据传递
+
+        from("rest:post:/camel/users")
+                .to("jetty:http://127.0.0.1:8001/users?bridgeEndpoint=true&httpMethodRestrict=POST");
+
+
+        //put 方式暂未测试成功
+//        from("rest:put:/camel/users/{id}").process(new RestProcessor())
+//               .to("jetty:http://127.0.0.1:8001/users/"+ RestProcessor.getUrl_id() +"?bridgeEndpoint=true&httpMethodRestrict=PUT");
 
         //consumes()  接受媒体类型   application/json 或者 text/xml 默认为全部
         //produces()  返回媒体类型  application/json 或者 text/xml 默认为全部

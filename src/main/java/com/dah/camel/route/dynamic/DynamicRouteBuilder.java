@@ -2,6 +2,7 @@ package com.dah.camel.route.dynamic;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.camel.ExchangeProperties;
 import org.apache.camel.Processor;
 import org.apache.camel.spring.SpringRouteBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +68,7 @@ public class DynamicRouteBuilder extends SpringRouteBuilder {
         });
     }
 
-    public String doDirect(Map<String, Object> properties) {
+    public String doDirect(@ExchangeProperties Map<String, Object> properties) {
         System.out.println("properties : " + properties);
         // 在Exchange的properties属性中，取出Dynamic Router的循环次数
         AtomicInteger time = (AtomicInteger) properties.get("time");
@@ -89,4 +90,20 @@ public class DynamicRouteBuilder extends SpringRouteBuilder {
         // 其它情况返回null，终止 dynamicRouter的执行
         return null;
     }
+
+
+
+    /**
+     *  from + isMulticast
+     *
+     */
+        /*from("jetty:http://127.0.0.1:8282/dynamicRouterCamelAll")
+                //.to("direct:directRouteAll");
+                // 使用dynamicRouter，进行“动态路由”循环，
+                // 直到指定的下一个元素为null为止
+                .dynamicRouter().method(this, "dynamicDirectAll");
+
+        from("direct:directRouteAll")
+                .multicast()
+                .to((String[]) list.toArray());*/
 }
