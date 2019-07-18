@@ -42,8 +42,7 @@ public class RouteDetail {
     private String previousId;
 
 
-    //translate
-
+    //transient
     //所属 路由ID
     private String routeDefinitionRouteId;
     //当前端点的 Uri
@@ -53,6 +52,12 @@ public class RouteDetail {
 
     //测试字段
     private boolean hasChild;
+
+    //是否已运行
+    private boolean hasRun;
+
+    // 所属广播
+    private String multicast;
 
 
 }

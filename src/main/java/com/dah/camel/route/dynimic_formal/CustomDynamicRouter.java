@@ -11,11 +11,21 @@ public class CustomDynamicRouter {
     public String route(@Header(Exchange.SLIP_ENDPOINT) LinkedList<RouteDetail> routeDetails) {
         if (!EmptyUtil.isEmptyList(routeDetails)) {
             for(RouteDetail routeDetail : routeDetails){
+                routeDetail.setHasRun(true);
+                RouteDetailUtils.replaceByRouteDetail(routeDetail, DynamicRouteBuilder.routeDetails);
                 if (StringUtils.isEmpty(routeDetail.getExpression()) || SpELUtil.parser(routeDetail.getExpression())) {
-                    routeDetails.remove(routeDetail);
+                    if(routeDetail.equals(routeDetails.getLast())){
+                        routeDetails.remove(routeDetail);
+                        routeDetails = RouteDetailUtils.getSameLevelListBySenderId(routeDetail.getPreviousId(), DynamicRouteBuilder.routeDetails);
+                    } else {
+                        routeDetails.remove(routeDetail);
+                    }
                     return RouteDetail.PREFIX_DIRECT + routeDetail.getEndpointName();
                 }
-                routeDetails.remove(routeDetail);
+                if(routeDetail.equals(routeDetails.getLast())){
+                    routeDetails.remove(routeDetail);
+                    routeDetails = RouteDetailUtils.getSameLevelListBySenderId(routeDetail.getPreviousId(), DynamicRouteBuilder.routeDetails);
+                }
                 continue;
             }
         }
