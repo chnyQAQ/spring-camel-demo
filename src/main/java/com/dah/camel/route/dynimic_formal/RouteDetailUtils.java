@@ -17,36 +17,11 @@ public class RouteDetailUtils {
         return null;
     }
 
-    public static RouteDetail getRouteDetailById(String id, LinkedList<RouteDetail> routeDetails){
-        if(!EmptyUtil.isEmptyList(routeDetails)) {
-            for (RouteDetail routeDetail : routeDetails) {
-                if (id.equals(routeDetail.getId())) {
-                    return routeDetail;
-                }
-            }
-        }
-        return null;
-    }
-
     public static LinkedList<RouteDetail> getReceiverListBySenderId(String senderId, LinkedList<RouteDetail> routeDetails){
         if(!EmptyUtil.isEmptyList(routeDetails)) {
             LinkedList<RouteDetail> routeDetailLists = new LinkedList<>();
             for (RouteDetail routeDetail : routeDetails) {
                 if (routeDetail.getPreviousId().equals(senderId)) {
-                    routeDetailLists.add(routeDetail);
-                }
-            }
-            return routeDetailLists;
-        }
-        return null;
-    }
-
-    public static LinkedList<RouteDetail> getSameLevelListBySenderId(String senderId, LinkedList<RouteDetail> routeDetails){
-        if(!EmptyUtil.isEmptyList(routeDetails)) {
-            senderId = getRouteDetailById(senderId, routeDetails).getPreviousId();
-            LinkedList<RouteDetail> routeDetailLists = new LinkedList<>();
-            for (RouteDetail routeDetail : routeDetails) {
-                if (routeDetail.getPreviousId().equals(senderId) && !routeDetail.isHasRun()) {
                     routeDetailLists.add(routeDetail);
                 }
             }
@@ -67,22 +42,6 @@ public class RouteDetailUtils {
         }
     }
 
-    public static void setAllNotRunRouteDetail(LinkedList<RouteDetail> routeDetails){
-        if(!EmptyUtil.isEmptyList(routeDetails)) {
-            for (RouteDetail routeDetailTemp : routeDetails) {
-                routeDetailTemp.setHasRun(false);
-            }
-        }
-    }
-
-    public static void setAllNotMulticast(LinkedList<RouteDetail> routeDetails){
-        if(!EmptyUtil.isEmptyList(routeDetails)) {
-            for (RouteDetail routeDetailTemp : routeDetails) {
-                routeDetailTemp.setMulticast(null);
-            }
-        }
-    }
-
     public static LinkedList<RouteDetail> getMulticastLists(LinkedList<RouteDetail> routeDetailList){
         LinkedList<RouteDetail> multicastList = new LinkedList<>();
         if (!EmptyUtil.isEmptyList(routeDetailList)) {
@@ -92,7 +51,7 @@ public class RouteDetailUtils {
                 }
             }
         }
-        return multicastList;
+       return multicastList;
     }
 
 }
