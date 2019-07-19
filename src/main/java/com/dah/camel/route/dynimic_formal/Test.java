@@ -5,10 +5,9 @@ import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spring.SpringRouteBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class Test extends SpringRouteBuilder {
@@ -17,7 +16,6 @@ public class Test extends SpringRouteBuilder {
     private CamelContext camelContext;
 
     public static LinkedList<RouteDetail> routeDetails;
-
 
     static {
         routeDetails = new LinkedList<>();
@@ -35,121 +33,85 @@ public class Test extends SpringRouteBuilder {
     public void configure() throws Exception {
         RouteDetail routeDetailFrom = RouteDetailUtils.getRouteDetailFrom(routeDetails);
         // 循环动态路由 Dynamic Router
+        LinkedList<RouteDetail> routeDetailReceiverListTemp = RouteDetailUtils.getMulticastLists(RouteDetailUtils.getReceiverListBySenderId(routeDetailFrom.getId(), routeDetails));
         RouteDefinition routeDefinition = new RouteDefinition();
         routeDefinition.from(routeDetailFrom.getEndpointUri())
             .routeId(routeDetailFrom.getEndpointName())
-            .process(new Processor() {//processor处理参数
-                @Override
-                public void process(Exchange exchange) throws Exception {
-                    RouteDetailUtils.setAllNotRunRouteDetail(routeDetails);
-                    LinkedList<RouteDetail> routeDetailReceiverListTemp = RouteDetailUtils.getReceiverListBySenderId(routeDetailFrom.getId(), routeDetails);
-                    exchange.getIn().setHeader(Exchange.SLIP_ENDPOINT, getMulticastLists(routeDetailReceiverListTemp));
-                    customProcessor(exchange, routeDetailReceiverListTemp);
-                }
-            })
+            .process(new CustomDynamicRouterProcessor(routeDetailReceiverListTemp))
             .dynamicRouter().method(Test.class, "choiceRoute");
         camelContext.addRouteDefinition(routeDefinition);
+        initRoutes(routeDetailReceiverListTemp);
+        camelContext.startRoute(routeDetailFrom.getId());
     }
 
-    public void customProcessor(Exchange exchange, LinkedList<RouteDetail> routeDetailReceiverListTemp) throws Exception {
-        LinkedList<RouteDetail> isMu = new LinkedList<>();
-        if (!EmptyUtil.isEmptyList(routeDetailReceiverListTemp)) {
-            //initParam(exchange, routeDetailReceiverListTemp);
-            for (RouteDetail childRoute : routeDetailReceiverListTemp) {
-                if(null != camelContext.getRoute(childRoute.getMulticast())) {
-                    camelContext.removeRoute(childRoute.getMulticast());
-                }
-                if(StringUtils.isEmpty(childRoute.getExpression()) || SpELUtil.parser(childRoute.getExpression())) {
-                    isMu.add(childRoute);
-                } else {
-                    childRoute.setMulticast(null);
-                }
-            }
-            buildMulticast(isMu);
-            initRoutes(exchange, routeDetailReceiverListTemp);
-        }
-    }
-
-
-    public LinkedList<RouteDetail> getMulticastLists(LinkedList<RouteDetail> routeDetailReceiverListTemp){
-        LinkedList<RouteDetail> isMu = new LinkedList<>();
-        if (!EmptyUtil.isEmptyList(routeDetailReceiverListTemp)) {
-            //initParam(exchange, routeDetailReceiverListTemp);
-            for (RouteDetail childRoute : routeDetailReceiverListTemp) {
-                if(StringUtils.isEmpty(childRoute.getExpression()) || SpELUtil.parser(childRoute.getExpression())) {
-                    isMu.add(childRoute);
-                }
-            }
-        }
-        return isMu;
-    }
 
 
     // 初始化路由
-    public void initRoutes (Exchange exchange, List<RouteDetail> routes) throws Exception {
-        for (RouteDetail routeDetail : routes) {
-            if (null == camelContext.getRoute(routeDetail.getEndpointName())) {
-                LinkedList<RouteDetail> routeDetailReceiverListTemp = RouteDetailUtils.getReceiverListBySenderId(routeDetail.getId(), routeDetails);
-                customProcessor(exchange, routeDetailReceiverListTemp);
+    public void initRoutes (List<RouteDetail> routeDetailList) throws Exception {
+        if(!EmptyUtil.isEmptyList(routeDetailList)){
+            for (RouteDetail routeDetail : routeDetailList) {
+                LinkedList<RouteDetail> routeDetailReceiverListTemp = RouteDetailUtils.getMulticastLists(RouteDetailUtils.getReceiverListBySenderId(routeDetail.getId(), routeDetails));
                 buildRoute(routeDetail);
+                initRoutes(routeDetailReceiverListTemp);
+                buildMulticast(routeDetailList);
             }
         }
     }
 
     // 构建广播
     public void buildMulticast(List<RouteDetail> routeDetailList) throws Exception {
-
-        String name = "multicast_" + UUID.randomUUID().toString();
-        if(routeDetailList.size() > 0){
+        if(!EmptyUtil.isEmptyList(routeDetailList)){
+            //广播临时名称
+            String name = "multicast_" + UUID.randomUUID().toString();
             int len = routeDetailList.size();
             String [] array = new String[len];
             for (int i=0; i< len; i++){
+                //判断当前上下文中是否还存在当前路由的广播，存在则删除，重新构建
+                RouteDetail routeDetail = routeDetailList.get(i);
+                Route route = camelContext.getRoute(routeDetail.getMulticast());
+                if(null != route){
+                    camelContext.stopRoute(route.getId(), 500, TimeUnit.MICROSECONDS);
+                    camelContext.removeRoute(route.getId());
+                }
                 array[i] = RouteDetail.PREFIX_DIRECT + routeDetailList.get(i).getEndpointName();
-            }
-
-            System.out.println(name);
-            RouteDefinition routeDefinition = new RouteDefinition();
-            routeDefinition.from(RouteDetail.PREFIX_DIRECT + name).routeId(name)
-                    .multicast()
-                    .to(array).log("from: " + name + " to: " + array[0] + " running...");
-            camelContext.addRouteDefinition(routeDefinition);
-            for (RouteDetail routeDetail : routeDetailList) {
                 routeDetail.setMulticast(name);
                 RouteDetailUtils.replaceByRouteDetail(routeDetail, routeDetails);
             }
+
+            RouteDefinition routeDefinition = new RouteDefinition();
+            routeDefinition.from(RouteDetail.PREFIX_DIRECT + name).routeId(name).log("from: " + name + " to: " + array[0] + " running..." + System.currentTimeMillis())
+                    .multicast()
+                    .to(array);
+            camelContext.addRouteDefinition(routeDefinition);
         }
     }
     // 构建
-    public void buildRoute(RouteDetail route) throws Exception {
+    public void buildRoute(RouteDetail routeDetail) throws Exception {
+        //获取当前节点的接收者列表
+        LinkedList<RouteDetail> routeDetailReceiverListTemp = RouteDetailUtils.getMulticastLists(RouteDetailUtils.getReceiverListBySenderId(routeDetail.getId(), routeDetails));
+        Route route = camelContext.getRoute(routeDetail.getEndpointName());
         // 判定上下文中是否存在route,不存在则创建route
-        if (null == camelContext.getRoute(RouteDetail.PREFIX_DIRECT + route.getEndpointName())) {
+        if (null == route) {
             RouteDefinition routeDefinition = new RouteDefinition();
-            routeDefinition.from(RouteDetail.PREFIX_DIRECT + route.getEndpointName())
-                    .routeId(RouteDetail.PREFIX_DIRECT + route.getEndpointName())
-                    .to(route.getEndpointUri())
-                    .log("from: " + route.getPreviousId() + " to: " + route.getEndpointName() + " running...")
+            routeDefinition.from(RouteDetail.PREFIX_DIRECT + routeDetail.getEndpointName())
+                    .routeId(routeDetail.getEndpointName())
+                    .to(routeDetail.getEndpointUri())
+                    .log("from: " + routeDetail.getPreviousId() + " to: " + routeDetail.getEndpointName() + " running..." + System.currentTimeMillis())
+                    .process(new CustomDynamicRouterProcessor(routeDetailReceiverListTemp))
                     .dynamicRouter().method(Test.class, "choiceRoute");
             camelContext.addRouteDefinition(routeDefinition);
         }
     }
 
     // 选择路由执行
-    public String choiceRoute(@Header(Exchange.SLIP_ENDPOINT) LinkedList<RouteDetail> routeDetailList) {
-        if(!EmptyUtil.isEmptyList(routeDetailList)) {
-            for(RouteDetail routeDetail : routeDetailList) {
-                routeDetail.setHasRun(true);
-                RouteDetailUtils.replaceByRouteDetail(routeDetail, routeDetails);
-                if (StringUtils.isEmpty(routeDetail.getExpression()) || SpELUtil.parser(routeDetail.getExpression())) {
-                    //choiceRoute(properties);
-                    if(routeDetail.equals(routeDetailList.get(routeDetailList.size()-1))) {
-                        routeDetails = RouteDetailUtils.getSameLevelListBySenderId(routeDetail.getPreviousId(), routeDetails);
-                        return RouteDetail.PREFIX_DIRECT + routeDetail.getMulticast();
-                    }
+    public String choiceRoute(@Header(Exchange.SLIP_ENDPOINT) LinkedList<RouteDetail> list) throws Exception {
+        if(!EmptyUtil.isEmptyList(list)) {
+            for(RouteDetail routeDetail : list) {
+                if(routeDetail.equals(list.getFirst())){
+                    return RouteDetail.PREFIX_DIRECT + routeDetail.getMulticast();
                 }
-                continue;
             }
         }
         return null;
     }
-
 }

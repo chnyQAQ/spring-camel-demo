@@ -71,8 +71,28 @@ public class RouteDetailUtils {
         if(!EmptyUtil.isEmptyList(routeDetails)) {
             for (RouteDetail routeDetailTemp : routeDetails) {
                 routeDetailTemp.setHasRun(false);
+            }
+        }
+    }
+
+    public static void setAllNotMulticast(LinkedList<RouteDetail> routeDetails){
+        if(!EmptyUtil.isEmptyList(routeDetails)) {
+            for (RouteDetail routeDetailTemp : routeDetails) {
                 routeDetailTemp.setMulticast(null);
             }
         }
     }
+
+    public static LinkedList<RouteDetail> getMulticastLists(LinkedList<RouteDetail> routeDetailList){
+        LinkedList<RouteDetail> multicastList = new LinkedList<>();
+        if (!EmptyUtil.isEmptyList(routeDetailList)) {
+            for (RouteDetail routeDetail : routeDetailList) {
+                if(StringUtils.isEmpty(routeDetail.getExpression()) || SpELUtil.parser(routeDetail.getExpression())) {
+                    multicastList.add(routeDetail);
+                }
+            }
+        }
+        return multicastList;
+    }
+
 }
