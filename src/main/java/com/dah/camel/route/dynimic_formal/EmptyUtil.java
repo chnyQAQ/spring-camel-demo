@@ -12,8 +12,7 @@ public class EmptyUtil {
     }
 
 
-    public static boolean isNotEmptyList(List<?> list)
-    {
+    public static boolean isNotEmptyList(List<?> list) {
         return !isEmptyList(list);
     }
 
@@ -28,8 +27,7 @@ public class EmptyUtil {
     }
 
 
-    public static boolean isEmptySet(Set<?> set)
-    {
+    public static boolean isEmptySet(Set<?> set) {
         return (null == set || set.size() == 0);
     }
 

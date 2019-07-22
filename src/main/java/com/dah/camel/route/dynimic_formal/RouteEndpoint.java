@@ -7,18 +7,20 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RouteDetail {
+public class RouteEndpoint {
 
     public static final String PREFIX_ENTPOINT = "endpoint_";
 
     public static final String PREFIX_DIRECT = "direct:";
+
+    public static final String PREFIX_MULTICAST = "multicast_";
 
     private String id;
 
     /**
      * 所属 路由定义 记录ID
      */
-    private String routeDefinitionId;
+    private String routeId;
 
 
     /**
@@ -29,7 +31,7 @@ public class RouteDetail {
     /**
      * endpointId 指向endpoint_{endpointType}表中的某条数据
      */
-    private String endpointInstanceId;
+    private String endpointId;
 
     /**
      * 表达式（动态路由的条件）
@@ -43,15 +45,9 @@ public class RouteDetail {
 
 
     //transient
-    //所属 路由ID
-    private String routeDefinitionRouteId;
     //当前端点的 Uri
     private String endpointUri;
     //当前端点的名称
-    private String endpointInstanceName;
-
-    // 所属广播
-    private String multicast;
-
+    private String endpointName;
 
 }

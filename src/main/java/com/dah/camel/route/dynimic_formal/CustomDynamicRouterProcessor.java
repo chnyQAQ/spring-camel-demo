@@ -7,14 +7,14 @@ import java.util.LinkedList;
 
 public class CustomDynamicRouterProcessor implements Processor {
 
-    private LinkedList<RouteDetail> routeDetails;
+    private LinkedList<RouteEndpoint> routeEndpoints;
 
-    public CustomDynamicRouterProcessor(LinkedList<RouteDetail> routeDetails) {
-        this.routeDetails = routeDetails;
+    public CustomDynamicRouterProcessor(LinkedList<RouteEndpoint> routeEndpoints) {
+        this.routeEndpoints = routeEndpoints;
     }
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        exchange.getIn().setHeader(Exchange.SLIP_ENDPOINT, routeDetails);
+        exchange.getIn().setHeader(Exchange.SLIP_ENDPOINT, routeEndpoints);
     }
 }
