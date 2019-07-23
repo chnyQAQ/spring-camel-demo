@@ -3,7 +3,7 @@ package com.dah.camel.route.multicast;
 import org.apache.camel.spring.SpringRouteBuilder;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class MulticastRouteBuilder extends SpringRouteBuilder {
     @Override
     public void configure() throws Exception {

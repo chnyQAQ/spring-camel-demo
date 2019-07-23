@@ -47,7 +47,5 @@ public class RouteEndpoint {
     //transient
     //当前端点的 Uri
     private String endpointUri;
-    //当前端点的名称
-    private String endpointName;
 
 }

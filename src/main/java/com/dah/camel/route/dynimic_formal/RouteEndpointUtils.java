@@ -2,11 +2,12 @@ package com.dah.camel.route.dynimic_formal;
 
 import org.springframework.util.StringUtils;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RouteEndpointUtils {
 
-    public static RouteEndpoint getRouteEndpointFrom(LinkedList<RouteEndpoint> routeEndpoints){
+    public static RouteEndpoint getRouteEndpointFrom(List<RouteEndpoint> routeEndpoints){
         if(!EmptyUtil.isEmptyList(routeEndpoints)){
             for(RouteEndpoint routeEndpoint : routeEndpoints){
                 if (StringUtils.isEmpty(routeEndpoint.getPreviousId())) {
@@ -17,33 +18,21 @@ public class RouteEndpointUtils {
         return null;
     }
 
-    public static LinkedList<RouteEndpoint> getReceiverListBySenderId(String routeEndpointId, LinkedList<RouteEndpoint> routeEndpoints){
+    public static List<RouteEndpoint> getReceiverListBySenderId(String routeEndpointId, List<RouteEndpoint> routeEndpoints){
         if(!EmptyUtil.isEmptyList(routeEndpoints)) {
-            LinkedList<RouteEndpoint> routeEndpointLinkedList = new LinkedList<>();
+            List<RouteEndpoint> routeEndpointList = new ArrayList<>();
             for (RouteEndpoint routeDetail : routeEndpoints) {
                 if (routeDetail.getPreviousId().equals(routeEndpointId)) {
-                    routeEndpointLinkedList.add(routeDetail);
+                    routeEndpointList.add(routeDetail);
                 }
             }
-            return routeEndpointLinkedList;
+            return routeEndpointList;
         }
         return null;
     }
 
-    public static void replaceByRouteEndpoint(RouteEndpoint routeEndpoint, LinkedList<RouteEndpoint> routeEndpoints){
-        if(!EmptyUtil.isEmptyList(routeEndpoints)) {
-            for (RouteEndpoint routeEndpointTemp : routeEndpoints) {
-                if (routeEndpoint.getId().equals(routeEndpointTemp.getId())) {
-                    routeEndpoints.remove(routeEndpointTemp);
-                    routeEndpoints.add(routeEndpoint);
-                    break;
-                }
-            }
-        }
-    }
-
-    public static LinkedList<RouteEndpoint> getMulticastLists(LinkedList<RouteEndpoint> routeEndpoints){
-        LinkedList<RouteEndpoint> multicastList = new LinkedList<>();
+    public static List<RouteEndpoint> getMulticastLists(List<RouteEndpoint> routeEndpoints){
+        List<RouteEndpoint> multicastList = new ArrayList<>();
         if (!EmptyUtil.isEmptyList(routeEndpoints)) {
             for (RouteEndpoint routeEndpoint : routeEndpoints) {
                 if(StringUtils.isEmpty(routeEndpoint.getExpression()) || SpELUtil.parser(routeEndpoint.getExpression())) {

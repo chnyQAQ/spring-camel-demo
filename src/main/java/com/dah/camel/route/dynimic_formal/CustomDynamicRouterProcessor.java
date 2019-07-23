@@ -3,13 +3,14 @@ package com.dah.camel.route.dynimic_formal;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
-import java.util.LinkedList;
+import java.util.List;
+
 
 public class CustomDynamicRouterProcessor implements Processor {
 
-    private LinkedList<RouteEndpoint> routeEndpoints;
+    private List<RouteEndpoint> routeEndpoints;
 
-    public CustomDynamicRouterProcessor(LinkedList<RouteEndpoint> routeEndpoints) {
+    public CustomDynamicRouterProcessor(List<RouteEndpoint> routeEndpoints) {
         this.routeEndpoints = routeEndpoints;
     }
 
